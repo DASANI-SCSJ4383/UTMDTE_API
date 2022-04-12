@@ -7,12 +7,16 @@ use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UtmleadAdministrator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
-    public function list($lecturerID)
+    public function list()
     {
-        $courses = Course::where('lectureID', $lecturerID)
+        $lecturer = Auth::user();
+
+        $courses = Course::where('lectureID', $lecturer->id)
             ->get()
             ->each(function ($course) {
                 if (isset($course->formID)) {
@@ -40,11 +44,21 @@ class CourseController extends Controller
         ], 200, [], JSON_NUMERIC_CHECK);
     }
 
-    public function set($id, $formID)
+    public function setForm(Request $request, $id)
     {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'FormID' => 'integer|required|exists:App\Models\Form,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 404);
+        }
+
         $course = Course::find($id);
 
-        $course->setform($formID);
+        $course->setform($request->input('FormID'));
 
         return response()->json([
             'message' => 'success'
