@@ -6,7 +6,6 @@ use App\Models\Form;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\UtmleadAdministrator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,16 +15,16 @@ class CourseController extends Controller
     {
         $lecturer = Auth::user();
 
-        $courses = Course::where('lectureID', $lecturer->id)
+        $courses = Course::where('lecturerID', $lecturer->userable_id)
             ->get()
             ->each(function ($course) {
                 if (isset($course->formID)) {
                     $form = Form::find($course->formID);
-                    $utmleadAdmin = UtmleadAdministrator::find($form->utmleadAdministratorID);
-                    $utmleadAdminName = $utmleadAdmin->user()->name;
-
-                    $course->setAttribute('utmleadAdminName', $utmleadAdminName);
+                    $course->setAttribute('form', $form);
+                    unset($course->formID);
                 }
+
+                $course->ischecked = $course->ischecked == '1' ? true : false;
             });
 
         return response()->json([

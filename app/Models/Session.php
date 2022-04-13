@@ -22,16 +22,4 @@ class Session extends Model
         'startAnswer',
         'endAnswer',
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'startSetFrom' => 'datetime:d-m-Y',
-        'endSetForm' => 'datetime:d-m-Y',
-        'startAnswer' => 'datetime:d-m-Y',
-        'endAnswer' => 'datetime:d-m-Y',
-    ];
 }

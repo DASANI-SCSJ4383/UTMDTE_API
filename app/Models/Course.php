@@ -24,6 +24,15 @@ class Course extends Model
         'sessionID',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'isChecked' => 'boolean',
+    ];
+
     public function setForm($formID)
     {
         $this->formID = $formID;

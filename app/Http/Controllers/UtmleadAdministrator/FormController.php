@@ -15,7 +15,7 @@ class FormController extends Controller
         $utmleadAdmin = Auth::user();
 
         $forms = Form::with('rubrics')
-            ->where("utmleadAdministratorID", $utmleadAdmin->id)
+            ->where("utmleadAdministratorID", $utmleadAdmin->userable_id)
             ->get();
 
         return response()->json([
