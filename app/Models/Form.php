@@ -19,4 +19,12 @@ class Form extends Model
         'description',
         'utmleadAdministratorID',
     ];
+
+    /**
+     * Get the rubrics for the form.
+     */
+    public function rubrics()
+    {
+        return $this->hasMany(Rubric::class, 'formID');
+    }
 }

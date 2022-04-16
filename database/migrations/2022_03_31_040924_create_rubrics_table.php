@@ -19,8 +19,11 @@ return new class extends Migration
             $table->string('rubricType');
             $table->text('description');
             $table->json('answers');
-            $table->integer('formID')->unsigned();
-            $table->foreign('formID')->references('id')->on('forms')->onDelete('cascade');
+            
+            $table->foreignId('formID')
+                  ->constrained('forms')
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
 
             $table->timestamps();
         });

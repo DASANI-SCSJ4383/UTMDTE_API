@@ -30,4 +30,12 @@ class Rubric extends Model
     protected $casts = [
         'answers' => AsCollection::class,
     ];
+
+    /**
+     * Get the form that owns the rubric.
+     */
+    public function form()
+    {
+        return $this->belongsTo(Form::class, "formID");
+    }
 }

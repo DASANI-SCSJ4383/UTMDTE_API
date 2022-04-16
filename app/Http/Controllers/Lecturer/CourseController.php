@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Lecturer;
 
 use App\Models\Form;
 use App\Models\Course;
+use App\Traits\CourseTrait;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class CourseController extends Controller
 {
+    use CourseTrait;
+
     public function list()
     {
         $lecturer = Auth::user();
@@ -18,10 +21,10 @@ class CourseController extends Controller
         $courses = Course::where('lecturerID', $lecturer->userable_id)
             ->get()
             ->each(function ($course) {
-                if (isset($course->formID)) {
-                    $form = Form::find($course->formID);
+                if (isset($course->formid)) {
+                    $form = Form::find($course->formid);
                     $course->setAttribute('form', $form);
-                    unset($course->formID);
+                    unset($course->formid);
                 }
 
                 $course->ischecked = $course->ischecked == '1' ? true : false;
@@ -35,7 +38,7 @@ class CourseController extends Controller
 
     public function view($id)
     {
-        $course = Course::find($id);
+        $course = $this->getCourse($id);
 
         return response()->json([
             'course' => $course,
@@ -55,9 +58,24 @@ class CourseController extends Controller
             return response()->json($validator->errors(), 404);
         }
 
-        $course = Course::find($id);
+        $course = $this->getCourse($id);
 
         $course->setform($request->input('FormID'));
+
+        $course->save();
+
+        return response()->json([
+            'message' => 'success'
+        ], 200, [], JSON_NUMERIC_CHECK);
+    }
+
+    public function unsetForm($id)
+    {
+        $course = $this->getCourse($id);
+
+        $course->formid = null;
+
+        $course->save();
 
         return response()->json([
             'message' => 'success'

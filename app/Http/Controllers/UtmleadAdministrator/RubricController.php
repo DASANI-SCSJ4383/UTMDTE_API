@@ -12,8 +12,8 @@ class RubricController extends Controller
 {
     public function list($formID)
     {
-        $rubrics = Rubric::where('formID', $formID)->get();
         $form = Form::find($formID);
+        $rubrics = $form->rubrics;
 
         return response()->json([
             'rubrics' => $rubrics,
