@@ -28,3 +28,4 @@ Route::middleware('auth:api')->group(function () {
 
 require __DIR__ . '/api/utmleadAdministrator.php';
 require __DIR__ . '/api/lecturer.php';
+require __DIR__ . '/api/student.php';

@@ -17,8 +17,8 @@ class FormController extends Controller
     {
         $course = $this->getCourse($courseID);
 
-        if ($course->formid != null) {
-            $currentForm = $this->getForm($course->formid);
+        if (isset($course->form)) {
+            $currentForm = $course->form;
             $currentFormId = $currentForm->id;
         } else {
             $currentFormId = -1;

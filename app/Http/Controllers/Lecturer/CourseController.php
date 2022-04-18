@@ -18,17 +18,7 @@ class CourseController extends Controller
     {
         $lecturer = Auth::user();
 
-        $courses = Course::where('lecturerID', $lecturer->userable_id)
-            ->get()
-            ->each(function ($course) {
-                if (isset($course->formid)) {
-                    $form = Form::find($course->formid);
-                    $course->setAttribute('form', $form);
-                    unset($course->formid);
-                }
-
-                $course->ischecked = $course->ischecked == '1' ? true : false;
-            });
+        $courses = $this->getCoursesByLecturer($lecturer->userable_id);
 
         return response()->json([
             'courses' => $courses,

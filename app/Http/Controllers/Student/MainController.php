@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\UtmleadAdministrator;
+namespace App\Http\Controllers\Student;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\UtmleadAdministrator;
+use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
