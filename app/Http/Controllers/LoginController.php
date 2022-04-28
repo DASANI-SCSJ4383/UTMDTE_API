@@ -42,7 +42,7 @@ class LoginController extends Controller
         $user = array_merge(auth()->user()->toArray(), auth()->user()->userable->toArray());
         $userType = explode("\\", auth()->user()->userable_type)[2];
 
-        return response()->json(['user' => $user, 'userType' => $userType,], 200);
+        return response()->json(['user' => $user, 'userType' => $userType,], 201);
     }
 
     public function fail()
