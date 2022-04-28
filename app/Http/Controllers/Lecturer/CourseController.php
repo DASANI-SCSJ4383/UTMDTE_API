@@ -56,7 +56,7 @@ class CourseController extends Controller
 
         return response()->json([
             'message' => 'success'
-        ], 201, [], JSON_NUMERIC_CHECK);
+        ], 200, [], JSON_NUMERIC_CHECK);
     }
 
     public function unsetForm($id)
