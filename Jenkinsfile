@@ -1,29 +1,48 @@
+
 pipeline {
      agent any
-     stages {
-         stage('Build') {
-             steps {
-                 echo 'Building...'
-             }
-             post {
-                 always {
-                     jiraSendBuildInfo branch: 'master', site: 'dasani.atlassian.net'
-                 }
-             }
-         }
-         stage('Deploy - Production') {
-           when {
-               branch 'master'
-           }
-           steps {
-               echo 'Deploying to Production from master...'
-           }
-           post {
-               always {
-                   jiraSendDeploymentInfo environmentId: '', environmentName: '', environmentType: 'development', issueKeys: [''], serviceIds: [''], site: 'dasani.atlassian.net', state: 'unknown'
-               }
-           }
+     environment {
+        DOCKERHUB_CREDENTIALS=credentials('dockerhub-cred-acapvevo')
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                sh 'docker build -t DASANI-SCSJ4383/UTMDTE_API:latest .'
+            }
+            post {
+                always {
+                    jiraSendBuildInfo branch: 'master', site: 'dasani.atlassian.net'
+                }
+            }
         }
-     }
- }
-
+        stage('Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Push') {
+            steps {
+                sh 'docker push DASANI-SCSJ4383/UTMDTE_API:latest'
+            }
+        }
+        stage('Deploy - Production') {
+            when {
+                branch 'master'
+            }
+            steps {
+                echo 'Deploying to Production from master...'
+            }
+            post {
+                always {
+                    jiraSendDeploymentInfo environmentId: '', environmentName: '', environmentType: 'development', issueKeys: [''], serviceIds: [''], site: 'dasani.atlassian.net', state: 'unknown'
+                }
+            }
+        }
+    }
+    post {
+		always {
+			sh 'docker logout'
+		}
+	}
+}
