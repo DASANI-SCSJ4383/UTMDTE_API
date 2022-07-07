@@ -8,7 +8,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'docker build -t DASANI-SCSJ4383/utmdte_api:latest .'
+                sh 'docker build -t dasani-scsj4383/utmdte_api:latest .'
             }
             post {
                 always {
@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Push') {
             steps {
-                sh 'docker push DASANI-SCSJ4383/utmdte_api:latest'
+                sh 'docker push dasani-scsj4383/utmdte_api:latest'
             }
         }
         stage('Deploy - Production') {
